@@ -19,8 +19,6 @@ cat zonelistfull.log | jq -r '.data[] | ."id"' >> zonesidlist.log
 zonesidlist=$(cat zonesidlist.log)
 for zoneid in $zonesidlist; do echo Enumerating zone : $zoneid && ./zonesenum.sh $zoneid ; done
 
-rm -f zoneenum_$1.json
-rm -f zoneenum_fixed_$1.json
 rm -f zonesnamelist.log
 rm -f zonesidlist.log
 rm -f zonesenum.sh
