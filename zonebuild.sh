@@ -5,7 +5,7 @@ export target_comp=$2
 export target_viewid=$3
 
 zonename=$(cat $filename | jq -r '. | ."domain"')
-zone_exist=$(grep $zonename mirrored_* -lR)
+zone_exist=$(find mirrored_$zonename.json)
 if [ -z "$zone_exist" ]
   then 
   zone=$(oci dns zone create --compartment-id $target_comp --name $zonename --zone-type "PRIMARY" --scope "PRIVATE" --view-id $target_viewid) 
