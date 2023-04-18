@@ -20,7 +20,7 @@ cat zoneenum_fixed_$1.json >> zoneexport_$1.json
 echo "]," >> zoneexport_$1.json
 echo ""'"scope"'": "'"PRIVATE"'"," >> zoneexport_$1.json
 echo ""'"viewId"'": "'"'$zone_viewid'"'"," >> zoneexport_$1.json
-echo ""'"zoneNameOrId"'": "'"'$zoneid'"'" >> zoneexport_$1.json
+echo ""'"zoneNameOrId"'": "'"'$zoneid'"'"">> zoneexport_$1.json
 echo "}" >> zoneexport_$1.json
 
 rm -f zoneenum_$1.json
