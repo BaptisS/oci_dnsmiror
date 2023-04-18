@@ -2,9 +2,9 @@
 #zonesenum.sh
 export zoneid=$1
 zonedetail=$(oci dns zone get --zone-name-or-id $zoneid)
-zone_compid=$(echo $zonedetail | jq -r '.[] | ."compartment-id"')
-zone_dom=$(echo $zonedetail | jq -r '.[] | ."name"')
-zone_viewid=$(echo $zonedetail | jq -r '.[] | ."view-id"')
+zone_compid=$(echo $zonedetail | jq -r '.data | ."compartment-id"')
+zone_dom=$(echo $zonedetail | jq -r '.data | ."name"')
+zone_viewid=$(echo $zonedetail | jq -r '.data | ."view-id"')
 echo "Enumerating Domain : '"$zone_dom"'"
 
 oci dns record zone get --zone-name-or-id $zoneid --all > zoneenum_$1.json
