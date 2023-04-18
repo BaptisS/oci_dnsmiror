@@ -1,5 +1,6 @@
 # oci_dnsmiror
 
+Export : 
 
 ````
 #!/bin/sh 
@@ -22,3 +23,20 @@ for zoneid in $zonesidlist; do echo Enumerating zone : $zoneid && ./zonesenum.sh
 rm -f zonesnamelist.log
 rm -f zonesidlist.log
 rm -f zonesenum.sh
+
+````
+
+Import : 
+
+
+````
+#!/bin/sh
+#variables
+export target_comp="ocid1.compartment."
+export target_viewid="ocid1.dnsview."
+
+zonesfiles=$(grep '"rtype": "A"' zoneexport_ocid* -lR)
+for file in $zonesfiles; do ./zonebuild.sh $file $target_comp $target_viewid ; done
+
+
+
