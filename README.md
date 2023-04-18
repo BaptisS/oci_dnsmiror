@@ -38,7 +38,21 @@ export target_viewid="ocid1.dnsview."
 rm -f zonebuild.sh
 wget https://raw.githubusercontent.com/BaptisS/oci_dnsmiror/main/zonebuild.sh
 chmod +x zonebuild.sh
-zonesfiles=$(grep '"rtype": "A"' zoneexport_ocid* -lR)
+
+grep '"rtype": "A"' zoneexport_ocid* -lR > zonesa.list
+grep '"rtype": "PTR"' zoneexport_ocid* -lR > zonesptr.list
+
+cat zonesa.list > zones.file
+cat zonesptr.list >> zones.file
+uniq -u zones.file > zonesfile.log
+
+zonesfiles=$(cat zonesfile.log)
+
+rm-f zonesfile.log
+rm -f zones.file
+
+#zonesfiles=$(grep '"rtype": "A"' zoneexport_ocid* -lR)
+
 for file in $zonesfiles; do ./zonebuild.sh $file $target_comp $target_viewid ; done
 
 
