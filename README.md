@@ -48,7 +48,7 @@ uniq -u zones.file > zonesfile.log
 
 zonesfiles=$(cat zonesfile.log)
 
-rm-f zonesfile.log
+rm -f zonesfile.log
 rm -f zones.file
 
 #zonesfiles=$(grep '"rtype": "A"' zoneexport_ocid* -lR)
