@@ -35,6 +35,9 @@ Import :
 export target_comp="ocid1.compartment."
 export target_viewid="ocid1.dnsview."
 
+rm -f zonebuild.sh
+wget https://raw.githubusercontent.com/BaptisS/oci_dnsmiror/main/zonebuild.sh
+chmod +x zonebuild.sh
 zonesfiles=$(grep '"rtype": "A"' zoneexport_ocid* -lR)
 for file in $zonesfiles; do ./zonebuild.sh $file $target_comp $target_viewid ; done
 
