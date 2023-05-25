@@ -26,6 +26,7 @@ rm -f zonesenum.sh
 
 export date=$(date --iso-8601)
 zip dns-zones.$date.zip zoneexport_ocid1.dns-zone*
+rm -f *.json
 export filename=$(ls *.zip)
 export path=$(pwd)
 echo $path/$filename
