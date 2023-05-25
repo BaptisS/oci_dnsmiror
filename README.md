@@ -66,3 +66,20 @@ for file in $zonesfiles; do ./zonebuild.sh $file $target_comp $target_viewid ; d
 
 
 
+
+
+````
+
+Cleanup: 
+
+
+````
+#!/bin/sh
+#variables
+export compocid='ocid1.compartment.abcdefgh'
+export viewid='ocid1.dnsview.abcdefgh'
+
+zoneslist=$(oci dns zone list --compartment-id $compocid --view-id $viewid --scope PRIVATE --all | jq -r '.data[] | [."id"] | @csv' | tr -d '"')
+for zone in $zoneslist; do oci dns zone delete --zone-name-or-id $zone --force --scope PRIVATE --view-id $viewid && echo zone $zone deleted;done
+
+
