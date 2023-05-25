@@ -24,6 +24,14 @@ rm -f zonesnamelist.log
 rm -f zonesidlist.log
 rm -f zonesenum.sh
 
+export date=$(date --iso-8601)
+zip dns-zones.$date.zip zoneexport_ocid1.dns-zone*
+export filename=$(ls *.zip)
+export path=$(pwd)
+echo $path/$filename
+
+
+
 ````
 
 Import : 
