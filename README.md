@@ -14,7 +14,7 @@ rm -f zonesidlist.log
 
 complist=$(oci iam compartment list --all --compartment-id-in-subtree true)
 complistcur=$(echo $complist | jq .data | jq -r '.[] | ."id"')
-for compocid in $complistcur; do oci dns zone list --compartment-id $compocid --all --scope PRIVATE --query 'data[?("is-protected")].["is-protected"]' >> zonelistfull.log ; done
+for compocid in $complistcur; do oci dns zone list --compartment-id $compocid --all --scope PRIVATE --query 'data[?("is-protected")]' >> zonelistfull.log ; done
 cat zonelistfull.log | jq -r '.data[] | ."name"' >> zonesnamelist.log
 cat zonelistfull.log | jq -r '.data[] | ."id"' >> zonesidlist.log
 zonesidlist=$(cat zonesidlist.log)
