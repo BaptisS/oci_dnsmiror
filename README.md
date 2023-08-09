@@ -48,11 +48,17 @@ rm -f zonebuild.sh
 wget https://raw.githubusercontent.com/BaptisS/oci_dnsmiror/main/zonebuild.sh
 chmod +x zonebuild.sh
 
+rm -f zonesa.list
+rm -f zonesptr.list
+rm -f zonesaaaa.list
+
 grep '"rtype": "A"' zoneexport_ocid* -lR > zonesa.list
 grep '"rtype": "PTR"' zoneexport_ocid* -lR > zonesptr.list
+grep '"rtype": "AAAA"' zoneexport_ocid* -lR > zonesaaaa.list
 
 cat zonesa.list > zones.file
 cat zonesptr.list >> zones.file
+cat zonesaaaa.list >> zone.file
 uniq -u zones.file > zonesfile.log
 
 zonesfiles=$(cat zonesfile.log)
