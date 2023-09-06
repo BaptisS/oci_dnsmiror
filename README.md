@@ -19,9 +19,10 @@ rm -f zonesnamelist-$region-$tenancyname.log
 rm -f zonesidlist-$region-$tenancyname.log
 
 
-oci search resource structured-search --query-text "query dnsview resources" --region $region > dnsviews-$region-$tenancyname.log
-complistcur=$(cat dnsviews-$region-$tenancyname.log | jq -r '.data.items[] | ."compartment-id"')
-for compocid in $complistcur; do oci dns zone list --compartment-id $compocid --all --scope PRIVATE --query 'data[?("is-protected")]' >> zonelistfull-$region-$tenancyname.log ; done
+#oci search resource structured-search --query-text "query dnsview resources" --region $region > dnsviews-$region-$tenancyname.log
+#complistcur=$(cat dnsviews-$region-$tenancyname.log | jq -r '.data.items[] | ."compartment-id"'| sort | uniq)
+complistcur=$(oci search resource structured-search --query-text "query dnsview resources" --region $region | jq -r '.data.items[] | ."compartment-id"'| sort | uniq)
+for compocid in $complistcur; do echo List Zones in $compocid && oci dns zone list --compartment-id $compocid --all --scope PRIVATE --query 'data[?("is-protected")]' >> zonelistfull-$region-$tenancyname.log ; done
 cat zonelistfull-$region-$tenancyname.log | jq -r '.[] | ."name"' >> zonesnamelist-$region-$tenancyname.log
 cat zonelistfull-$region-$tenancyname.log | jq -r '.[] | ."id"' >> zonesidlist-$region-$tenancyname.log
 zonesidlist=$(cat zonesidlist-$region-$tenancyname.log)
