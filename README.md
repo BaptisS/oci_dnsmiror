@@ -3,34 +3,40 @@
 Export : 
 
 ````
+
 #!/bin/sh 
 rm -f zonesenum.sh
 wget https://raw.githubusercontent.com/BaptisS/oci_dnsmiror/main/zonesenum.sh
 chmod +x zonesenum.sh
 rm -f zonelist.log
-rm -f zonelistfull.log
-rm -f zonesnamelist.log
-rm -f zonesidlist.log
 
-complist=$(oci iam compartment list --all --compartment-id-in-subtree true)
-complistcur=$(echo $complist | jq .data | jq -r '.[] | ."id"')
-for compocid in $complistcur; do oci dns zone list --compartment-id $compocid --all --scope PRIVATE --query 'data[?("is-protected")]' >> zonelistfull.log ; done
-cat zonelistfull.log | jq -r '.[] | ."name"' >> zonesnamelist.log
-cat zonelistfull.log | jq -r '.[] | ."id"' >> zonesidlist.log
-zonesidlist=$(cat zonesidlist.log)
+export region=$(echo $OCI_REGION)
+export tenancyid=$(echo $OCI_TENANCY)
+export tenancyname=$(oci iam compartment get --compartment-id $tenancyid | jq -r '.data | ."name"')
+
+rm -f zonelistfull-$region-$tenancyname.log
+rm -f zonesnamelist-$region-$tenancyname.log
+rm -f zonesidlist-$region-$tenancyname.log
+
+
+oci search resource structured-search --query-text "query dnsview resources" --region $region > dnsviews-$region-$tenancyname.log
+complistcur=$(cat dnsviews-$region-$tenancyname.log | jq -r '.data.items[] | ."compartment-id"')
+for compocid in $complistcur; do oci dns zone list --compartment-id $compocid --all --scope PRIVATE --query 'data[?("is-protected")]' >> zonelistfull-$region-$tenancyname.log ; done
+cat zonelistfull-$region-$tenancyname.log | jq -r '.[] | ."name"' >> zonesnamelist-$region-$tenancyname.log
+cat zonelistfull-$region-$tenancyname.log | jq -r '.[] | ."id"' >> zonesidlist-$region-$tenancyname.log
+zonesidlist=$(cat zonesidlist-$region-$tenancyname.log)
 for zoneid in $zonesidlist; do echo Enumerating zone : $zoneid && ./zonesenum.sh $zoneid ; done
 
-rm -f zonesnamelist.log
-rm -f zonesidlist.log
+rm -f zonesnamelist-$region-$tenancyname.log
+rm -f zonesidlist-$region-$tenancyname.log
 rm -f zonesenum.sh
 
 export date=$(date --iso-8601)
-zip dns-zones.$date.zip zoneexport_ocid1.dns-zone*
+zip dns-zones.$date_$tenancyname_$region.zip zoneexport_ocid1.dns-zone*
 rm -f *.json
 export filename=$(ls *.zip)
 export path=$(pwd)
 echo $path/$filename
-
 
 
 ````
